@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buurtcampus</title>
+    <link rel="stylesheet" href="/style.css">    
+    <link rel="stylesheet" href="/styleguide.css">
+    <script src="/script.js" defer></script>
+  </head>
+  <body class="district-{{ district | default: 'algemeen' }}">
+    <header>
+      <div class="top-bar">
+        <a href="/">
+          <img class="site-logo" src="/logo-{{ district | default: 'algemeen' }}.png" alt="Buurtcampus">        
+        </a>
+        <a class="menu-button" href="#menu" id="menuOpen">Menu</a>
+        <nav>
+          <ul>
+            <li>
+              <a href="/zuidoost">
+                Zuidoost
+              </a>
+            </li>
+            <li>
+              <a href="/oost">
+                Oost
+              </a>
+            </li>
+            <li>
+              <a href="/nieuw-west">
+                Nieuw-West
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      {% render 'partials/search.liquid', district: district %}
+    </header>
