@@ -1,5 +1,5 @@
 const menuOpen = document.querySelector("#menuOpen")
-const menu = document.querySelector('.menu')
+const menu = document.querySelector(".menu")
 const root = document.documentElement
 
 document.documentElement.classList.remove("no-js")
@@ -11,9 +11,9 @@ if (menuOpen && menu) {
     const isOpen = menu.classList.toggle("is-open")
 
     if (isOpen) {
-      root.classList.add('menu-open')
+      root.classList.add("menu-open")
     } else {
-      root.classList.remove('menu-open')
+      root.classList.remove("menu-open")
     }
   })
 }
