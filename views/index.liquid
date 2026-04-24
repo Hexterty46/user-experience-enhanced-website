@@ -9,9 +9,18 @@
             
             <a href="/{{ story.district }}/{{ story.slug }}">
                 {% if story.cover.id %}
-                    <img src="https://fdnd-agency.directus.app/assets/{{ story.cover.id }}" alt="{{ story.title }}">
+                    <picture>
+                        <source type="image/avif" srcset="https://fdnd-agency.directus.app/assets/{{ story.cover.id }}?format=avif">
+                        <source type="image/webp" srcset="https://fdnd-agency.directus.app/assets/{{ story.cover.id }}?format=webp">
+                        <img src="https://fdnd-agency.directus.app/assets/{{ story.cover.id }}" alt="{{ story.title }}">
+                    </picture>
                 {% else %}
-                    <img src="/no-image-available-icon.jpg" alt="Geen afbeelding beschikbaar">
+                    <picture>
+                        <source type="image/avif" srcset="/no-image-available-icon.jpg?format=avif">
+                        <source type="image/webp" srcset="/no-image-available-icon.jpg?format=webp">
+                        <img loading="lazy" src="/no-image-available-icon.jpg" alt="Geen afbeelding beschikbaar">
+                    </picture>
+                    
                 {% endif %}
 
                 <div class="card-content">

@@ -8,7 +8,7 @@
         
         <a href="/{{ story.district }}/{{ story.slug }}">
             {% if story.cover.id %}
-                <img src="https://fdnd-agency.directus.app/assets/{{ story.cover.id }}" alt="{{ story.title }}">
+                <img src="https://fdnd-agency.directus.app/assets/{{ story.cover.id }}" alt="{{ story.title }}" fetchpriority=high>
             {% else %}
                 <img src="/no-image-available-icon.jpg" alt="Geen afbeelding beschikbaar">
             {% endif %}
