@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/style.css">    
     <link rel="stylesheet" href="/styleguide.css">
     <script src="/script.js" defer></script>
+    <script src="/client.js" defer></script>
   </head>
   <body class="district-{{ district | default: 'algemeen' }}">
     <header>
@@ -17,6 +18,11 @@
         <a class="menu-button" href="#menu" id="menuOpen">Menu</a>
         <nav>
           <ul>
+            <li>
+              <a href="/algemeen">
+                Algemeen
+              </a>
+            </li>
             <li>
               <a href="/zuidoost">
                 Zuidoost

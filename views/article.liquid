@@ -5,9 +5,15 @@
   <a href="/{{ district }}">
     <button class="back-link">Terug</button>
   </a>
-
-  {{ story.body }}
-
+<main>
+  <div class="article-description">
+    {% if story.body %}
+      {{ story.body }}
+      {% else %}
+        <h1>Geen artikel beschikbaar</h1>
+    {% endif %}
+  </div>
+</main>
 
   <section class="article-comments">
     <h2>Laat een comment achter</h2>
@@ -21,18 +27,21 @@
           <textarea id="comment" name="comment" rows="3" placeholder="Ik heb een opmerking over" required></textarea>
         </label>
         <input type="hidden" name="story" value="{{ story.id }}">
-        <button class="primary-button" type="submit">Verstuur</button>
+        <button id="loadingButton" class="primary-button" type="submit">Verstuur</button>
       </form>
   </section>
 
-  <section class="recent-comments">
+  <section id="comments" class="recent-comments">
     <h2>Recente reacties</h2>
     <div class="recent-comments-container">
       {% if story.comments and story.comments.size > 0 %}
-        {% for comment in story.comments %}
+        {% for comment in story.comments reversed %}
           <article class="single-comment">
             <span>{{ comment.name }}</span>
             <p>{{ comment.comment }}</p>
+            <form action="/{{ district }}/{{ story.slug }}/comment/{{ comment.id }}/delete" method="POST">
+              <button type="submit" class="delete-button">Verwijder</button>
+            </form>
           </article>
         {% endfor %}
         {% else %}
