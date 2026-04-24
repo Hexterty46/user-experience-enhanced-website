@@ -2,8 +2,6 @@ console.log('Hier komt je server voor Sprint 10.')
 
 console.log('Gebruik uit Sprint 9 alleen de code die je mee wilt nemen.')
 
-console.log('Zet \'m op!')
-
 // Importeer het npm package Express (uit de door npm aangemaakte node_modules map)
 // Deze package is geïnstalleerd via `npm install`, en staat als 'dependency' in package.json
 import express from 'express'
@@ -159,10 +157,23 @@ app.post('/:district/:slug/comment', async function (request, response) {
       }
     }
   )
-
-  // Optioneel: result checken
   // const data = await res.json()
   // console.log(data)
+
+  response.redirect(303, `/${request.params.district}/${request.params.slug}/`)
+})
+
+// Comment delete
+
+app.post('/:district/:slug/comment/:id/delete', async function (request, response) {
+  const commentId = request.params.id
+
+  await fetch(
+    `https://fdnd-agency.directus.app/items/buurtcampuskrant_stories_comments/${commentId}`,
+    {
+      method: 'DELETE'
+    }
+  )
 
   response.redirect(303, `/${request.params.district}/${request.params.slug}/`)
 })
@@ -183,3 +194,5 @@ app.listen(app.get('port'), function () {
     `App draait op http://localhost:${app.get('port')}/\nThe Web is for Everyone.`
   )
 })
+
+console.log('Zet \'m op!')
