@@ -2,51 +2,81 @@
 {% render 'partials/menu.liquid' %}
 {% render 'partials/sorteren.liquid', district: district %}
 
-<section class="cards-container">
+<main>
+  <section class="cards-container">
     {% for story in stories %}
-    <article class="card {{ story.district }}">
-        
+      <article class="card {{ story.district }}">
         <a href="/{{ story.district }}/{{ story.slug }}">
-            {% if story.cover.id %}
-                <img src="https://fdnd-agency.directus.app/assets/{{ story.cover.id }}" alt="{{ story.title }}" fetchpriority=high>
+          {% if story.cover %}
+            <picture>
+              <source
+                type="image/avif"
+                srcset="https://fdnd-agency.directus.app/assets/{{ story.cover.id }}?fit=cover&format=avif&width=400&quality=80"
+              >
+              <source
+                type="image/webp"
+                srcset="https://fdnd-agency.directus.app/assets/{{ story.cover.id }}?fit=cover&format=webp&width=400&quality=80"
+              >
+              <img
+                class="article-cover"
+                src="https://fdnd-agency.directus.app/assets/{{ story.cover.id }}?width=400&quality=80"
+                width="{{ story.cover.width }}"
+                height="{{ story.cover.height }}"
+                alt="{{ story.title }}"
+              >
+            </picture>
+          {% else %}
+            <img src="/no-image-available-icon.jpg" alt="Geen afbeelding beschikbaar">
+          {% endif %}
+
+          <div class="card-content">
+            {% if story.district == 'nieuw-west' %}
+              <h2 style="color: #2F3418">{{ story.title }}</h2>
+            {% elsif story.district == 'oost' %}
+              <h2 style="color: #E3E5F2">{{ story.title }}</h2>
+            {% elsif story.district == 'zuidoost' %}
+              <h2 style="color: #DDF0F2">{{ story.title }}</h2>
+            {% elsif story.district == 'algemeen' %}
+              <h2 style="color: #DDF0F2">{{ story.title }}</h2>
             {% else %}
-                <img src="/no-image-available-icon.jpg" alt="Geen afbeelding beschikbaar">
+              <h2>Geen titel aangegeven</h2>
+            {% endif %}
+            {% if story.intro %}
+              <p>{{ story.intro | truncate: 100 }}</p>
+            {% else %}
+              <p>Geen intro beschikbaar</p>
             {% endif %}
 
-            <div class="card-content">
-                {% if story.district == 'nieuw-west' %}
-                    <h2 style="color: #2F3418">{{ story.title }}</h2>
-                {% elsif story.district == 'oost' %}
-                    <h2 style="color: #E3E5F2">{{ story.title }}</h2>
-                {% elsif story.district == 'zuidoost' %}
-                    <h2 style="color: #DDF0F2">{{ story.title }}</h2>
-                {% elsif story.district == 'algemeen' %}
-                    <h2 style="color: #DDF0F2">{{ story.title }}</h2>
-                {% else %}
-                    <h2>Geen titel aangegeven</h2>
-                {% endif %}
-                {% if story.intro %}
-                    <p>{{ story.intro | truncate: 100 }}</p>
-                    {% else %}
-                    <p>Geen intro beschikbaar</p>
-                {% endif %}
-
-                <time>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-icon lucide-calendar"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
-                    {% if story.date %}
-                        <span>{{ story.date }}</span>
-                    {% else %}
-                        <span>Datum onbekend</span>
-                    {% endif %}
-                </time>
-                <div class="card-tags">
-                    <span class="tag">{{ story.district | capitalize }}</span>
-                    <span class="tag outline">{{ story.target_group | default: "no target group" | capitalize }}</span>
-                </div>
+            <time>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-calendar-icon lucide-calendar"
+              >
+                <path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/>
+              </svg>
+              {% if story.date %}
+                <span>{{ story.date }}</span>
+              {% else %}
+                <span>Datum onbekend</span>
+              {% endif %}
+            </time>
+            <div class="card-tags">
+              <span class="tag">{{ story.district | capitalize }}</span>
+              <span class="tag outline">{{ story.target_group | default: 'no target group' | capitalize }}</span>
             </div>
+          </div>
         </a>
-    </article>
+      </article>
     {% endfor %}
-</section>
+  </section>
+</main>
 
 {% render 'partials/foot.liquid' %}

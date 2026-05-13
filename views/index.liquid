@@ -1,64 +1,126 @@
 {% render 'partials/head.liquid', district: district %}
 {% render 'partials/menu.liquid' %}
-{% render 'partials/sorteren.liquid', district: district %}
 
-<main>
-    <section class="cards-container">
-        {% for story in stories %}
-        <article class="card {{ story.district }}">
-            
-            <a href="/{{ story.district }}/{{ story.slug }}">
-                {% if story.cover.id %}
-                    <picture>
-                        <source type="image/avif" srcset="https://fdnd-agency.directus.app/assets/{{ story.cover.id }}?format=avif">
-                        <source type="image/webp" srcset="https://fdnd-agency.directus.app/assets/{{ story.cover.id }}?format=webp">
-                        <img src="https://fdnd-agency.directus.app/assets/{{ story.cover.id }}" alt="{{ story.title }}">
-                    </picture>
+<main class="home-main">
+  <section class="main-content">
+    {% assign latest = stories[0] %}
+    {% if latest %}
+      <a href="/{{ latest.district }}/{{ latest.slug }}" class="single-article-link">
+        <article class="featured-article overlay">
+          <picture class="featured-media">
+            <source
+              type="image/avif"
+              srcset="https://fdnd-agency.directus.app/assets/{{ latest.cover.id }}?fit=cover&format=avif&width=1600&quality=80"
+            >
+            <source
+              type="image/webp"
+              srcset="https://fdnd-agency.directus.app/assets/{{ latest.cover.id }}?fit=cover&format=webp&width=1600&quality=80"
+            >
+            <img
+              class="featured-cover"
+              src="https://fdnd-agency.directus.app/assets/{{ latest.cover.id }}?width=1600&quality=80"
+              width="{{ latest.cover.width }}"
+              height="{{ latest.cover.height }}"
+              alt="{{ latest.title }}"
+            >
+          </picture>
+
+          <div class="featured-article-content">
+            <div class="featured-article-information">
+              <span>Laatste nieuws</span>
+              <div class="featured-article-date">
+                <time datetime="{{ latest.date }}">{{ latest.date | date: '%d-%m-%Y' }}</time>
+              </div>
+            </div>
+            <h3>{{ latest.title }}</h3>
+          </div>
+        </article>
+      </a>
+    {% endif %}
+
+    {% assign districts = 'algemeen,nieuw-west,zuidoost,oost' | split: ',' %}
+
+    {% for d in districts %}
+      <section class="homepage-articles">
+        <div class="homepage-district-top">
+          {% if d == 'oost' %}
+            <h2 style="color: var(--primary-color-oost)">{{ d | capitalize }}</h2>
+          {% elsif d == 'zuidoost' %}
+            <h2 style="color: var(--primary-color-zuid-oost)">{{ d | capitalize }}</h2>
+          {% elsif d == 'nieuw-west' %}
+            <h2 style="color: var(--primary-color-nieuw-west)">{{ d | capitalize }}</h2>
+          {% elsif d == 'algemeen' %}
+            <h2 style="color: #2f3a45;">{{ d | capitalize }}</h2>
+          {% endif %}
+
+          <a href="/{{ d }}">Alles bekijken →</a>
+        </div>
+
+        <div class="district-articles {{ d }}">
+          {% assign district_stories = stories | where: 'district', d %}
+
+          {% for story in district_stories limit: 3 %}
+            <a href="/{{ story.district }}/{{ story.slug }}" class="single-article-link">
+              <article class="single-article {{ d }}">
+                {% if story.cover %}
+                  <picture>
+                    <source
+                      type="image/avif"
+                      srcset="https://fdnd-agency.directus.app/assets/{{ story.cover.id }}?fit=cover&format=avif&width=400&quality=80"
+                    >
+                    <source
+                      type="image/webp"
+                      srcset="https://fdnd-agency.directus.app/assets/{{ story.cover.id }}?fit=cover&format=webp&width=400&quality=80"
+                    >
+                    <img
+                      class="article-cover"
+                      src="https://fdnd-agency.directus.app/assets/{{ story.cover.id }}?width=400&quality=80"
+                      width="{{ story.cover.width }}"
+                      height="{{ story.cover.height }}"
+                      alt="{{ story.title }}"
+                    >
+                  </picture>
                 {% else %}
-                    <picture>
-                        <source type="image/avif" srcset="/no-image-available-icon.jpg?format=avif">
-                        <source type="image/webp" srcset="/no-image-available-icon.jpg?format=webp">
-                        <img loading="lazy" src="/no-image-available-icon.jpg" alt="Geen afbeelding beschikbaar">
-                    </picture>
-                    
+                  <img
+                    class="article-cover fallback"
+                    src="/no-image-available-icon.jpg"
+                    alt="Geen afbeelding beschikbaar"
+                    style="--vt:image-cover-{{ story.id }}"
+                  >
                 {% endif %}
 
-                <div class="card-content">
-                    {% if story.district == 'nieuw-west' %}
-                        <h2 style="color: #2F3418">{{ story.title }}</h2>
-                    {% elsif story.district == 'oost' %}
-                        <h2 style="color: #E3E5F2">{{ story.title }}</h2>
-                    {% elsif story.district == 'zuidoost' %}
-                        <h2 style="color: #DDF0F2">{{ story.title }}</h2>
-                    {% elsif story.district == 'algemeen' %}
-                        <h2 style="color: #DDF0F2">{{ story.title }}</h2>
-                    {% else %}
-                        <h2>Geen titel aangegeven</h2>
-                    {% endif %}
-                    {% if story.intro %}
-                        <p>{{ story.intro | truncate: 100 }}</p>
-                        {% else %}
-                        <p>Geen intro beschikbaar</p>
-                    {% endif %}
+                <div class="article-card-content">
+                  {% if story.target_group %}
+                    <span class="article-targetgroup">{{ story.target_group | capitalize }}</span>
+                  {% else %}
+                    <span class="article-targetgroup">Iedereen</span>
+                  {% endif %}
 
-                    <time>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-icon lucide-calendar"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
-                        {% if story.date %}
-                            <span>{{ story.date }}</span>
-                        {% else %}
-                            <span>Datum onbekend</span>
-                        {% endif %}
+                  {% if story.date %}
+                    <time class="article-date" datetime="{{ story.date }}">
+                      {{ story.date | date: '%d-%m-%Y' }}
                     </time>
-                    <div class="card-tags">
-                        <span class="tag">{{ story.district | capitalize }}</span>
-                        <span class="tag outline">{{ story.target_group | default: "no target group" | capitalize }}</span>
-                    </div>
-                </div>
-            </a>
-        </article>
-        {% endfor %}
-    </section>
-</main>
+                  {% else %}
+                    <p class="article-date">Geen datum</p>
+                  {% endif %}
 
+                  {% if d == 'oost' %}
+                    <h3 style="color: #E3E5F2" class="article-title">{{ story.title }}</h3>
+                  {% elsif d == 'zuidoost' %}
+                    <h3 style="color: #DDF0F2" class="article-title">{{ story.title }}</h3>
+                  {% elsif d == 'nieuw-west' %}
+                    <h3 style="color: #2F3418;" class="article-title">{{ story.title }}</h3>
+                  {% elsif d == 'algemeen' %}
+                    <h3 style="color: #E6EDF3;" class="article-title">{{ story.title }}</h3>
+                  {% endif %}
+                </div>
+              </article>
+            </a>
+          {% endfor %}
+        </div>
+      </section>
+    {% endfor %}
+  </section>
+</main>
 
 {% render 'partials/foot.liquid' %}
