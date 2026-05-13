@@ -2,55 +2,74 @@
 
 {% render 'partials/menu.liquid' %}
 
-  <a href="/{{ district }}">
-    <button class="back-link">Terug</button>
-  </a>
-<main>
+<main class="article-main">
+  <a class="back-link" href="/{{ district }}">← Terug</a>
   <div class="article-description">
+    {% if story.cover %}
+      <picture>
+        <source
+          type="image/avif"
+          srcset="https://fdnd-agency.directus.app/assets/{{ story.cover.id }}?fit=cover&format=avif"
+        >
+
+        <source
+          type="image/webp"
+          srcset="https://fdnd-agency.directus.app/assets/{{ story.cover.id }}?fit=cover&format=webp"
+        >
+
+        <img
+          class="article-front-image"
+          class="single-article-cover"
+          src="https://fdnd-agency.directus.app/assets/{{ story.cover.id }}?height=500"
+          width="{{ story.cover.width }}"
+          height="{{ story.cover.height }}"
+        >
+      </picture>
+    {% endif %}
+    <h1>{{ story.title }}</h1>
     {% if story.body %}
       {{ story.body }}
-      {% else %}
-        <h1>Geen artikel beschikbaar</h1>
+    {% else %}
+      <h1>Geen artikel beschikbaar</h1>
     {% endif %}
   </div>
 </main>
 
-  <section class="article-comments">
-    <h2>Laat een comment achter</h2>
-      <form action="/{{ district }}/{{ story.slug }}/comment" class="comment-form" method="POST">
-        <label class="comments-field" for="name">
-          Naam:
-          <input type="text" id="name" name="name" placeholder="voornaam + achternaam" required>
-        </label>
-        <label class="comments-field" for="comment">
-          Bericht:
-          <textarea id="comment" name="comment" rows="3" placeholder="Ik heb een opmerking over" required></textarea>
-        </label>
-        <input type="hidden" name="story" value="{{ story.id }}">
-        <button id="loadingButton" class="primary-button" type="submit">Verstuur</button>
-      </form>
-  </section>
+<section class="article-comments">
+  <h2>Laat een comment achter</h2>
+  <form action="/{{ district }}/{{ story.slug }}/comment" class="comment-form" method="POST">
+    <label class="comments-field" for="name">
+      Naam:
+      <input type="text" id="name" name="name" placeholder="voornaam + achternaam" required>
+    </label>
+    <label class="comments-field" for="comment">
+      Bericht:
+      <textarea id="comment" name="comment" rows="3" placeholder="Ik heb een opmerking over" required></textarea>
+    </label>
+    <input type="hidden" name="story" value="{{ story.id }}">
+    <button id="loadingButton" class="primary-button" type="submit">Verzenden</button>
+  </form>
+</section>
 
-  <section id="comments" class="recent-comments">
-    <h2>Recente reacties</h2>
-    <div class="recent-comments-container">
-      {% if story.comments and story.comments.size > 0 %}
-        {% for comment in story.comments reversed %}
-          <article class="single-comment">
-            <span>{{ comment.name }}</span>
-            <p>{{ comment.comment }}</p>
-            <form action="/{{ district }}/{{ story.slug }}/comment/{{ comment.id }}/delete" method="POST">
-              <button type="submit" class="delete-button">Verwijder</button>
-            </form>
-          </article>
-        {% endfor %}
-        {% else %}
-        <div class="empty-state">
-          <span>Nog geen reacties</span>
-        </div>
-      {% endif %}
-    </div>
-  </section>
-  
+<section id="comments" class="recent-comments">
+  <h2>Recente reacties</h2>
+  <div class="recent-comments-container">
+    {% if story.comments and story.comments.size > 0 %}
+      {% for comment in story.comments reversed %}
+        <article class="single-comment">
+          <span>{{ comment.name }}</span>
+          <p>{{ comment.comment }}</p>
+          <form action="/{{ district }}/{{ story.slug }}/comment/{{ comment.id }}/delete" method="POST">
+            <button type="submit" class="delete-button">Verwijder</button>
+          </form>
+        </article>
+      {% endfor %}
+    {% else %}
+      <div class="empty-state">
+        <span>Nog geen reacties</span>
+      </div>
+    {% endif %}
+  </div>
+</section>
 
 {% render 'partials/foot.liquid' %}

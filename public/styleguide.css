@@ -12,6 +12,7 @@
     --primary-color-nieuw-west: #8EA34B;
     --primary-color-oost: #333467;
     --primary-color-zuid-oost: #085B64;
+    --primary-color-algemeen: #E6EDF3;
     
 
 
@@ -25,4 +26,8 @@
 @font-face {
     font-family: Buurtcampus-Arial;
     src: url(/BuurtCampusArial-Bold.woff);
+}
+
+p {
+    font-family: Arial-regg, sans-serif;
 }
