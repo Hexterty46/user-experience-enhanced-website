@@ -31,18 +31,16 @@ app.set('views', './views')
  */
 app.get('/', async function (request, response) {
   const params = {
-    'filter[district]': 'algemeen',
-    'fields': 'title, target_group, slug, district, intro, date, cover.*'
+    // geen district-filter, zodat we alles kunnen groeperen
+    fields: 'title, target_group, slug, district, intro, date, cover.*'
   }
 
-  // Sorteren op datum
   if (request.query.sort === 'nieuw') {
-    params['sort'] = '-date' // nieuw → oud
+    params.sort = '-date'
   } else if (request.query.sort === 'oud') {
-    params['sort'] = 'date'  // oud → nieuw
+    params.sort = 'date'
   }
 
-  // Zoeken op titel
   if (request.query.search && request.query.search.trim() !== '') {
     params['filter[title][_icontains]'] = request.query.search.trim()
   }
@@ -57,13 +55,13 @@ app.get('/', async function (request, response) {
   response.render('index.liquid', {
     stories: apiResponseJSON.data,
     search: request.query.search || '',
-    currentSort: request.query.sort || ''
+    currentSort: request.query.sort || '',
+    district: 'algemeen'
   })
 })
 
 /**
  * DISTRICT – lijstpagina per district
- * ondersteunt: ?search=... & ?sort=nieuw|oud & ?filter=...
  */
 app.get('/:district', async function (request, response) {
   const district = request.params.district || 'algemeen'
@@ -109,7 +107,6 @@ app.get('/:district', async function (request, response) {
 
 /**
  * ARTIKEL – enkel artikel binnen een district
- * URL: /:district/:slug
  */
 app.get('/:district/:slug', async function (request, response) {
   const district = request.params.district
@@ -164,7 +161,6 @@ app.post('/:district/:slug/comment', async function (request, response) {
 })
 
 // Comment delete
-
 app.post('/:district/:slug/comment/:id/delete', async function (request, response) {
   const commentId = request.params.id
 

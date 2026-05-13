@@ -1,5 +1,5 @@
 // variables
-const commentForm = document.querySelector("#loadingButton")
+const commentForm = document.querySelector(".comment-form")
 const formButton = commentForm.querySelector("button")
 const comments = document.querySelector("#comments article")
 
