@@ -31,7 +31,6 @@ app.set('views', './views')
  */
 app.get('/', async function (request, response) {
   const params = {
-    // geen district-filter, zodat we alles kunnen groeperen
     fields: 'title, target_group, slug, district, intro, date, cover.*'
   }
 
