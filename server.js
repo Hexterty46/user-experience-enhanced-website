@@ -25,10 +25,7 @@ app.engine('liquid', engine.express())
 // Stel de map met Liquid templates in
 app.set('views', './views')
 
-/**
- * INDEX – algemene stories (district: algemeen)
- * ondersteunt: ?search=... & ?sort=nieuw|oud
- */
+// Index pagina
 app.get('/', async function (request, response) {
   const params = {
     fields: 'title, target_group, slug, district, intro, date, cover.*'
@@ -59,9 +56,7 @@ app.get('/', async function (request, response) {
   })
 })
 
-/**
- * DISTRICT – lijstpagina per district
- */
+// Lijst pagina per district
 app.get('/:district', async function (request, response) {
   const district = request.params.district || 'algemeen'
 
@@ -104,9 +99,7 @@ app.get('/:district', async function (request, response) {
   })
 })
 
-/**
- * ARTIKEL – enkel artikel binnen een district
- */
+// artikel binnen district
 app.get('/:district/:slug', async function (request, response) {
   const district = request.params.district
   const slug = request.params.slug
@@ -135,9 +128,7 @@ app.get('/:district/:slug', async function (request, response) {
   })
 })
 
-/**
- * COMMENT POST – reactie plaatsen op artikel
- */
+// Comment post
 app.post('/:district/:slug/comment', async function (request, response) {
   const res = await fetch(
     'https://fdnd-agency.directus.app/items/buurtcampuskrant_stories_comments',
@@ -173,9 +164,7 @@ app.post('/:district/:slug/comment/:id/delete', async function (request, respons
   response.redirect(303, `/${request.params.district}/${request.params.slug}/`)
 })
 
-/**
- * 404
- */
+// 404 pagina
 app.use((req, res) => {
   res.status(404).render('error.liquid')
 })
