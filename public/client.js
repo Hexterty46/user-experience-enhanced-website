@@ -11,6 +11,7 @@ commentForm.addEventListener("submit", async (event) => {
   try {
     formButton.classList.add("loading")
     formButton.textContent = "Loading..."
+    formButton.textContent = "✅"
 
     const formData = new FormData(commentForm)
 
@@ -18,6 +19,13 @@ commentForm.addEventListener("submit", async (event) => {
       method: commentForm.method,
       body: new URLSearchParams(formData),
     })
+
+    if (!response.ok) {
+      console.error("Fout bij het opslaan van de reactie", response.status)
+      formButton.textContent = "❌"
+      formButton.classList.remove("loading")
+      return
+    }
 
     const responseData = await response.text()
 
