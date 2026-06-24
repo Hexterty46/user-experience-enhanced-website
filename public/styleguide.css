@@ -21,11 +21,13 @@
 @font-face {
     font-family: Arial-regg;
     src: url(/arial.ttf);
+    font-display: swap;
 }
 
 @font-face {
     font-family: Buurtcampus-Arial;
     src: url(/BuurtCampusArial-Bold.woff);
+    font-display: swap;
 }
 
 p {
